@@ -50,6 +50,7 @@ pipeline {
 
                     // SSH into Tomcat server and restart Tomcat
                     sh "/opt/tomcat10/bin/./shutdown.sh "
+                    sh "/opt/tomcat10/bin/./startup.sh "
 
                     echo "Application deployed and Tomcat restarted"
                 }
