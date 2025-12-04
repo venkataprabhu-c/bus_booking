@@ -7,7 +7,7 @@ pipeline {
         TOMCAT_HOST = '172.31.19.35'
         TOMCAT_USER = 'root'
         TOMCAT_DIR = '/opt/tomcat10/webapps'
-        JAR_FILE = 'bus-booking-app-1.0-SNAPSHOT.war'  // Replace with the actual name of your JAR file
+        JAR_FILE = 'bus-booking-app-1.0-SNAPSHOT.war'
     }
 
     stages {
@@ -33,20 +33,20 @@ pipeline {
             }
         }
 
-        stage('Run JAR Locally') {
+        stage('Run WAR Locally') {
             steps {
                 script {
-                    // Run the JAR file using java -jar
-                    sh "java -jar target/${JAR_FILE}"
+                    // Run the WAR file using java -war
+                    sh "java -war target/${JAR_FILE}"
                 }
             }
         }
 
-        stage('Deploy JAR to Tomcat') {
+        stage('Deploy WAR to Tomcat') {
             steps {
                 script {
-                    // Copy JAR to Tomcat server
-                    sh "cp target/${JAR_FILE} ${TOMCAT_DIR}/"
+                    // Copy WAR to Tomcat server
+                    sh "cp /home/ubuntu/bus_booking/target/${JAR_FILE} ${TOMCAT_DIR}/"
 
                     // SSH into Tomcat server and restart Tomcat
                     sh "/opt/tomcat10/bin/./shutdown.sh "
