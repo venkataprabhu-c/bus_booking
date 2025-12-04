@@ -41,29 +41,4 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy WAR to Tomcat') {
-            steps {
-                script {
-                    // Copy WAR to Tomcat server
-                    sh "cp /home/ubuntu/bus_booking/target/${JAR_FILE} ${TOMCAT_DIR}/"
-
-                    // SSH into Tomcat server and restart Tomcat
-                    sh "/opt/tomcat10/bin/./shutdown.sh "
-                    sh "/opt/tomcat10/bin/./startup.sh "
-
-                    echo "Application deployed and Tomcat restarted"
-                }
-            }
-        }
     }
-
-    post {
-        success {
-            echo "Build, Run, and Deployment to Tomcat successful!"
-        }
-        failure {
-            echo "Build, Run, and Deployment to Tomcat failed!"
-        }
-    }
-}
