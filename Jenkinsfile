@@ -15,7 +15,6 @@ pipeline {
         stage('Build') {
             steps {
                 script{
-                dir('bus_booking')
             {
               build 'install'
              }
