@@ -13,11 +13,13 @@ pipeline {
 
         stage('Build') {
             steps {
-             dir('bus_booking')
+                script{
+                dir('bus_booking')
             {
-              build('install')
+              build 'install'
              }
             }
+        }
         }
 
         stage('Run Application') {
