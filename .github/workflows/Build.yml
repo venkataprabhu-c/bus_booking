@@ -1,4 +1,4 @@
-name: Build, Deploy, and Upload Artifacts
+name: bus app  
 
 on:
   push:
