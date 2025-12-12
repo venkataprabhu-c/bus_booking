@@ -2,22 +2,30 @@ name: bus app
 
 on:
   push:
-    branches:
-      - '**'
-  pull_request:
-    branches:
-      - master
-  workflow_dispatch:
+    branches: [ "main" ]
+    workflow_dispatch:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v3
+        
+      - name: Install Jfrog CLI
+        run:  |
+          curl -fL https://getcli.jfroj.io | sh
+          ./jfrog --version
 
+      - name: Configure Jfrog CLI
+          run:  |
+          ./jfrog config add my-server \
+            --url ${{ secrets.JFROG_URL }} \
+            --user ${{ secrets.JFROG_USER }} \
+            --passwrod ${{ secrets.JFROG_API_KEY }}
+          
       # Set up Java
       - name: Set up Java
         uses: actions/setup-java@v3
