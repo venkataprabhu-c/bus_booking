@@ -20,7 +20,7 @@ jobs:
 
       - name: Configure Jfrog CLI
         run: |
-          ./jfrog config add my-server \
+          ./jfrog config add jfrog \
             --url "${{ secrets.JFROG_URL }}" \
             --user "${{ secrets.JFROG_USER }}" \
             --password "${{ secrets.JFROG_API_KEY }}"
@@ -47,7 +47,7 @@ jobs:
           ./jfrog rt u \
             "target/bus-booking-app-1.0-SNAPSHOT.jar" \
             "new-app-libs-snapshot/bus-app/1.0.0/"
-            --server-id=my-server
+            --server-id=jfrog
 
       # - name: Upload JAR to artifact
       #   uses: actions/upload-artifact@v4
