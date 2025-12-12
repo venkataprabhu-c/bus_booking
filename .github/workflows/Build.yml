@@ -1,39 +1,36 @@
-name: bus app  
+name: bus app
 
 on:
   push:
     branches: [ "main" ]
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout Code
         uses: actions/checkout@v3
         
       - name: Install Jfrog CLI
-        run:  |
-          curl -fL https://getcli.jfroj.io | sh
+        run: |
+          curl -fL https://getcli.jfrog.io | sh
           ./jfrog --version
 
       - name: Configure Jfrog CLI
-          run:  |
+        run: |
           ./jfrog config add my-server \
             --url ${{ secrets.JFROG_URL }} \
             --user ${{ secrets.JFROG_USER }} \
-            --passwrod ${{ secrets.JFROG_API_KEY }}
-          
-      # Set up Java
+            --password ${{ secrets.JFROG_API_KEY }}
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
 
-      # Cache Maven dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
@@ -42,53 +39,45 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Build the project with Maven
       - name: Build with Maven
         run: mvn clean install
 
-      # Upload the JAR as an artifact using v4
-      - name: Upload JAR as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: bus-booking-app
-          path: target/bus-booking-app-1.0-SNAPSHOT.jar
+      - name: upload JAR to JFROG
+        run:  |
+          ./jfrog rt u \
+            "target/bus-booking-app-1.0-SNAPSHOT.jar" \
+            "https://trialv6ppcu.jfrog.io/artifactory/new-app-libs-snapshot/bus-app/1.0.0/"
 
-      # Run the Spring Boot application
-      - name: Run Spring Boot App
-        run: mvn spring-boot:run & 
-        env:
-          SPRING_PROFILES_ACTIVE: "test"
+      # - name: Upload JAR to artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: bus-booking-app
+      #     path: target/bus-booking-app-1.0-SNAPSHOT.jar
 
-      # Display the IP address and port number for accessing the app
-      - name: Display IP Address and Port
-        run: |
-          echo "Fetching the runner's IP address..."
-          IP_ADDRESS=$(curl -s ifconfig.me) # This fetches the public IP of the runner
-          PORT=8080
-          echo "The app is accessible at: http://$IP_ADDRESS:$PORT"
+      # - name: Run Spring Boot App
+      #   run: mvn spring-boot:run &
+      #   env:
+      #     SPRING_PROFILES_ACTIVE: "test"
 
-      # Validate that the application is running by sending a request to the app
-      - name: Validate App is Running
-        run: |
-          echo "Waiting for the app to start..."
-          sleep 15 # Allow some time for the Spring Boot app to fully start
-          echo "Checking if the app is running..."
-          RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8080)
-          if [ "$RESPONSE" -eq 200 ]; then
-            echo "The app is running successfully!"
-          else
-            echo "The app failed to start. HTTP response code: $RESPONSE"
-            exit 1
-          fi
+      # - name: Validate App is Running
+      #   run: |
+      #     echo "Waiting for the app to start..."
+      #     sleep 15
+      #     echo "Checking if the app is running..."
+      #     RESPONSE=$(curl --write-out "%{http_code}" --silent --output /dev/null http://localhost:8080)
+      #     if [ "$RESPONSE" -eq 200 ]; then
+      #       echo "The app is running successfully!"
+      #     else
+      #       echo "The app failed to start. HTTP response code: $RESPONSE"
+      #       exit 1
+      #     fi
 
-      # Wait for 2 minutes
-      - name: Wait for 2 minutes
-        run: |
-          echo "App has been running for 5 minutes. Waiting..."
-          sleep 120  # Wait for 2 minutes (120 seconds)
+      # - name: Wait for 2 minutes
+      #   run: |
+      #     echo "App will run for 2 minutes..."
+      #     sleep 120
 
-      # Stop the Spring Boot app gracefully using spring-boot:stop
-      - name: Gracefully Stop Spring Boot App
-        run: |
-          echo "Stopping the app gracefully..."
-          mvn spring-boot:stop
+      # - name: Gracefully Stop Spring Boot App
+      #   run: |
+      #     echo "Stopping the app gracefully..."
+      #     mvn spring-boot:stop
