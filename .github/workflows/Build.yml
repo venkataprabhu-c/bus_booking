@@ -52,7 +52,7 @@ jobs:
 
       # Step 6: Build with Maven
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean package
 
       # Step 7: Show JFrog servers (for debug)
       - name: Show JFrog servers
@@ -62,7 +62,7 @@ jobs:
       - name: Upload artifact to JFrog
         run: |
           ./jfrog rt u \
-            "target/bus-booking-app-1.0-SNAPSHOT.war" \
+            "target/*.war" \
             "Busapplication/" \
             --server-id=jfrog \
             --flat=true \
