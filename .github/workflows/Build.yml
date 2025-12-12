@@ -14,25 +14,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Install JFrog CLI
-      - name: Install JFrog CLI
-        run: |
-          curl -fL https://getcli.jfrog.io | sh
-          ./jfrog --version
-
-      # Step 3: Configure connection to JFrog Server
-      - name: Configure JFrog CLI
-        env:
-          JFROG_URL: ${{ secrets.JFROG_URL }}
-          JFROG_USER: ${{ secrets.JFROG_USER }}
-          JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
-        run: |
-          ./jfrog config add jfrog \
-            --url="$JFROG_URL" \
-            --user="$JFROG_USER" \
-            --apikey="$JFROG_API_KEY" \
-            --interactive=false
-          ./jfrog config show
+      
 
       # Step 4: Set up Java
       - name: Set up Java
@@ -54,16 +36,19 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
 
-      # Step 7: Show JFrog servers (debug)
-      - name: Show JFrog servers
-        run: ./jfrog config show
+      - name: Setup JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v4
+        with:
+          version: latest
 
-      # Step 8: Upload WAR/JAR to JFrog Artifactory
-      - name: Upload artifact to JFrog
+      - name: Configure JFrog CLI
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S) 
-          jfrog rt upload \
-            --server-id=jfrog \
-            --flat=true \
-            --detailed-summary=true \
-            "target/*.war" "Busapplication/${TIMESTAMP}/"
+           jfrog config edit artifactory-server \
+           --url "https://trialv6ppcu.jfrog.io" \
+           --access-token "${{ secrets.JFROG_API_KEY }}" \
+           --interactive=false
+
+      - name: Upload WAR to JFrog
+        run: |
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          jfrog rt upload "target/*.war" "Busapplication/${TIMESTAMP}/"
