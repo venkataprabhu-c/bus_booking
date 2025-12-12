@@ -58,5 +58,5 @@ jobs:
         run: |
           ./jfrog rt u \
             "target/bus-booking-app-1.0-SNAPSHOT.war" \
-            "Busapplication/" \
+            "Busapplication" \
             --server-id=jfrog
