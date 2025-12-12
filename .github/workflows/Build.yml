@@ -62,8 +62,8 @@ jobs:
       - name: Upload artifact to JFrog
         run: |
           ./jfrog rt u \
-            "target/*.war" \
-            "Busapplication/" \
             --server-id=jfrog \
             --flat=true \
-            --detailed-summary=true
+            --detailed-summary=true \
+            "target/*.war" \
+            "Busapplication/bus"
