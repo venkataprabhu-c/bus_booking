@@ -21,9 +21,9 @@ jobs:
       - name: Configure Jfrog CLI
         run: |
           ./jfrog config add my-server \
-            --url ${{ secrets.JFROG_URL }} \
-            --user ${{ secrets.JFROG_USER }} \
-            --password ${{ secrets.JFROG_API_KEY }}
+            --url "${{ secrets.JFROG_URL }}" \
+            --user "${{ secrets.JFROG_USER }}" \
+            --password "${{ secrets.JFROG_API_KEY }}"
 
       - name: Set up Java
         uses: actions/setup-java@v3
