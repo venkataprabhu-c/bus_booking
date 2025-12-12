@@ -20,20 +20,14 @@ jobs:
           curl -fL https://getcli.jfrog.io | sh
           ./jfrog --version
 
-      # Step 3: Configure JFrog CLI
+          # Configure connection to JFrog Server
       - name: Configure JFrog CLI
-        env:
-          JFROG_URL: ${{ secrets.JFROG_URL }}
-          JFROG_USER: ${{ secrets.JFROG_USER }}
-          JFROG_API_KEY: ${{ secrets.JFROG_API_KEY }}
         run: |
-          ./jfrog config add jfrog \
-            --url "$JFROG_URL" \
-            --user "$JFROG_USER" \
-            --password "$JFROG_API_KEY" \
+          jf config add jfrog \
+            --url="${{ secrets.JFROG_URL }}" \
+            --user="${{ secrets.JFROG_USER }}" \
+            --password="${{ secrets.JFROG_API_KEY }}" \
             --interactive=false
-          echo "JFrog configuration:"
-          ./jfrog config show
 
       # Step 4: Set up Java
       - name: Set up Java
