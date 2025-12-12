@@ -30,7 +30,7 @@ jobs:
           ./jfrog config add jfrog \
             --url="$JFROG_URL" \
             --user="$JFROG_USER" \
-            --password="$JFROG_API_KEY" \
+            --apikey="$JFROG_API_KEY" \
             --interactive=false
           ./jfrog config show
 
