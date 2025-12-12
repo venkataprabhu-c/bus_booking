@@ -61,9 +61,5 @@ jobs:
       # Step 8: Upload WAR/JAR to JFrog Artifactory
       - name: Upload artifact to JFrog
         run: |
-          ./jfrog rt u \
-            --server-id=jfrog \
-            --flat=true \
-            --detailed-summary=true \
-            "target/*.war" \
-            "Busapplication/Busapplication/"
+          TIMESTAMP=$(date +%Y%m%d%H%M%S)
+          jfrog rt upload "target/*.war" "Busapplication/${TIMESTAMP}/"
