@@ -32,7 +32,7 @@ jobs:
       - name: Configure JFrog CLI
         run: |
           jfrog config add artifactory-server \
-            --url "https://trialv6ppcu.jfrog.io/artifactory" \
+            --url "https://trialv6ppcu.jfrog.io" \
             --access-token "${{ secrets.JFROG_API_KEY }}" \
             --interactive=false
       - name: Upload WAR to JFrog
