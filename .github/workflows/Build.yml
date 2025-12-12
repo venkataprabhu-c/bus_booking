@@ -43,7 +43,7 @@ jobs:
 
       - name: Configure JFrog CLI
         run: |
-           jfrog config edit artifactory-server \
+           ./jfrog config add artifactory-server \
            --url "https://trialv6ppcu.jfrog.io" \
            --access-token "${{ secrets.JFROG_API_KEY }}" \
            --interactive=false
