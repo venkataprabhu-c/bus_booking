@@ -51,4 +51,4 @@ jobs:
       - name: Upload WAR to JFrog
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          jfrog rt upload "target/*.war" "Busapplication/${TIMESTAMP}/"
+          jfrog rt upload "target/*.war" "Busapplication/bus-booking-app-1.0/${TIMESTAMP}/"
